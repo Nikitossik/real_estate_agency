@@ -139,7 +139,7 @@ class Generator:
                     
             self.db.session.bulk_insert_mappings(Application, applications_data)
             self.db.session.commit()
-            print(f'Added {len(applications_data)} listings')
+            print(f'Added {len(applications_data)} applications')
         
     def initialize_sales(self, application_sample = 50):
         

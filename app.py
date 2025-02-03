@@ -1,33 +1,48 @@
-from api import app
+from flask import Flask, jsonify
+from werkzeug.exceptions import HTTPException
+from flask_swagger_ui import get_swaggerui_blueprint
+
 from api.routes import *
 from api.models import *
-from api.generator.generator import Generator
-import time
+
+# initializing the Flask app
+
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:nikita2004@localhost:5432/real_estate_agency"
+
+#global error handler
+
+@app.errorhandler(HTTPException)
+def handle_http_exception(e):
+    response = {
+        "code": e.code,
+        "error": e.name,
+        "description": e.description
+    }
+    return jsonify(response), e.code
+
+db.init_app(app)
+
+# swaggerui route
+
+SWAGGER_URL = '/docs'
+API_URL = '/static/swagger.json'
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Real Estate Agency API"
+    }
+)
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+
+# api routes
 
 app.register_blueprint(user_blueprint, url_prefix='/api/users')
 app.register_blueprint(property_blueprint, url_prefix='/api/properties')
 app.register_blueprint(listing_blueprint, url_prefix='/api/listings')
 app.register_blueprint(application_blueprint, url_prefix='/api/applications')
 
-# Initializing data with generator class
-
-# gen = Generator(app)
-    
-# start_time = time.time() 
-    
-# gen.gen_users(10000, True)
-# gen.gen_properties()
-# gen.gen_listing()
-# gen.gen_applications()
-# gen.initialize_sales()
-# gen.gen_sale_payments()
-# gen.initialize_rentals()
-# gen.terminate_contracts()
-# gen.terminate_contracts(listing_type="rental")
-    
-# end_time = time.time() 
-    
-# print(f"Database generation: {(end_time - start_time):.6f}s")
 
 if __name__ == '__main__':
     app.run(debug=True)

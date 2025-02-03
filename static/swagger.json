@@ -1,0 +1,793 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Real Estate Agency API",
+    "description": "A simple API that provides access to multiple resources - users, properties, listings, and applications.",
+    "version": "1.0"
+  },
+  "basePath": "/api",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "Returns a paginated list of users",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "default": 1,
+            "description": "The number of the page to return"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "type": "integer",
+            "default": 50,
+            "description": "The number of items to be returned on a single page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/User" }
+                },
+                "page": { "type": "integer" },
+                "pageSize": { "type": "integer" },
+                "total": { "type": "integer" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_name": { "type": "string", "example": "John" },
+                "user_surname": { "type": "string", "example": "Doe" },
+                "user_email": {
+                  "type": "string",
+                  "example": "john.doe@example.com"
+                },
+                "user_phone": { "type": "string", "example": "+1234567890" },
+                "bank_account": {
+                  "type": "string",
+                  "example": "1234567890123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created",
+            "schema": { "$ref": "#/definitions/User" }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "summary": "Get user by ID",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the user to get."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found",
+            "schema": { "$ref": "#/definitions/User" }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the user to modify."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_name": { "type": "string", "example": "John" },
+                "user_surname": { "type": "string", "example": "Doe" },
+                "user_email": {
+                  "type": "string",
+                  "example": "john.doe@example.com"
+                },
+                "user_phone": { "type": "string", "example": "+1234567890" },
+                "bank_account": {
+                  "type": "string",
+                  "example": "1234567890123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated",
+            "schema": { "$ref": "#/definitions/User" }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete user",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the user to delete."
+          }
+        ],
+        "responses": { "200": { "description": "User deleted" } }
+      }
+    },
+    "/users/{user_id}/properties": {
+      "get": {
+        "summary": "Get properties owned by a user",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the user."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "default": 1,
+            "description": "The number of the page to return"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "type": "integer",
+            "default": 50,
+            "description": "The number of items to be returned on a single page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of properties",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/Property" }
+                },
+                "page": { "type": "integer" },
+                "pageSize": { "type": "integer" },
+                "total": { "type": "integer" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/listings": {
+      "get": {
+        "summary": "Get listings posted by the user",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the user."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "default": 1,
+            "description": "The number of the page to return"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "type": "integer",
+            "default": 50,
+            "description": "The number of items to be returned on a single page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of listings",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/Listing" }
+                },
+                "page": { "type": "integer" },
+                "pageSize": { "type": "integer" },
+                "total": { "type": "integer" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/applications": {
+      "get": {
+        "summary": "Get applications published by the user",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the user."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "default": 1,
+            "description": "The number of the page to return"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "type": "integer",
+            "default": 50,
+            "description": "The number of items to be returned on a single page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of applications",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/Application" }
+                },
+                "page": { "type": "integer" },
+                "pageSize": { "type": "integer" },
+                "total": { "type": "integer" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/properties": {
+      "get": {
+        "summary": "Returns a paginated list of properties",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "default": 1,
+            "description": "The number of the page to return"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "type": "integer",
+            "default": 50,
+            "description": "The number of items to be returned on a single page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of properties",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Property" }
+            }
+          }
+        }
+      }
+    },
+    "/properties/{property_id}": {
+      "get": {
+        "summary": "Get property by id",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "UUID of the property."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Property found",
+            "schema": { "$ref": "#/definitions/Property" }
+          }
+        }
+      }
+    },
+    "/properties/{property_id}/owner": {
+      "get": {
+        "summary": "Get the owner of property with ID",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "UUID of the property."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Owner found",
+            "schema": { "$ref": "#/definitions/User" }
+          }
+        }
+      }
+    },
+    "/properties/{property_id}/listings": {
+      "get": {
+        "summary": "Get all listings the property was published in",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "UUID of the property."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "default": 1,
+            "description": "The number of the page to return"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "type": "integer",
+            "default": 50,
+            "description": "The number of items to be returned on a single page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of listings",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/Listing" }
+                },
+                "page": { "type": "integer" },
+                "pageSize": { "type": "integer" },
+                "total": { "type": "integer" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/listings": {
+      "get": {
+        "summary": "Returns a paginated list of listings. For this endpoint filtering parameters are available, watch detailed description down below.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "default": 1,
+            "description": "The number of the page to return"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "type": "integer",
+            "default": 50,
+            "description": "The number of items to be returned on a single page"
+          },
+          {
+            "name": "rooms",
+            "min": 1,
+            "in": "query",
+            "type": "integer",
+            "description": "The number of rooms"
+          },
+          {
+            "name": "building_type",
+            "in": "query",
+            "type": "string",
+            "description": "Building type of the property - tenement, blockOfFlats, apartmentBuilding"
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "type": "string",
+            "description": "City where property is located - must be lowercased",
+            "example": "katowice"
+          },
+          {
+            "name": "listing_type",
+            "in": "query",
+            "type": "string",
+            "description": "Type of the listing - sale or rent"
+          },
+          {
+            "name": "listing_status",
+            "in": "query",
+            "type": "string",
+            "default": "active",
+            "description": "Status of the listing - active, closed or archived"
+          },
+          {
+            "name": "price_min",
+            "in": "query",
+            "type": "integer",
+            "min": 0,
+            "description": "Minimum price of sale or rental amount (depends on the listing_type)"
+          },
+          {
+            "name": "price_max",
+            "in": "query",
+            "type": "integer",
+            "description": "Maximum price of sale or rental amount (depends on the listing_type)"
+          },
+          {
+            "name": "created_at_from",
+            "in": "query",
+            "type": "string",
+            "format": "ISO 8601",
+            "description": "Date after the listing was published"
+          },
+          {
+            "name": "created_at_to",
+            "in": "query",
+            "type": "string",
+            "format": "ISO 8601",
+            "description": "Date before the listing was published"
+          },
+          {
+            "name": "build_year_min",
+            "in": "query",
+            "type": "integer",
+            "description": "Minimum year when property was built"
+          },
+          {
+            "name": "build_year_max",
+            "in": "query",
+            "type": "integer",
+            "description": "Maximum year when property was built"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/DetailedListing" }
+                },
+                "page": { "type": "integer" },
+                "pageSize": { "type": "integer" },
+                "total": { "type": "integer" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/listings/{listing_id}": {
+      "get": {
+        "summary": "Get listing by ID",
+        "parameters": [
+          {
+            "name": "listing_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the listing to get."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listing found",
+            "schema": { "$ref": "#/definitions/Listing" }
+          }
+        }
+      }
+    },
+    "/listings/{listing_id}/author": {
+      "get": {
+        "summary": "Get the author (publisher) of the listing by ID",
+        "parameters": [
+          {
+            "name": "listing_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the listing to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/listings/{listing_id}/property": {
+      "get": {
+        "summary": "Get property object described in listing",
+        "parameters": [
+          {
+            "name": "listing_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the listing to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Property found",
+            "schema": { "$ref": "#/definitions/Property" }
+          }
+        }
+      }
+    },
+    "/listings/{listing_id}/applications": {
+      "get": {
+        "summary": "Get applications posted under listing",
+        "parameters": [
+          {
+            "name": "listing_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the listing to get"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "default": 1,
+            "description": "The number of the page to return"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "type": "integer",
+            "default": 50,
+            "description": "The number of items to be returned on a single page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of applications",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/Application" }
+                },
+                "page": { "type": "integer" },
+                "pageSize": { "type": "integer" },
+                "total": { "type": "integer" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications": {
+      "get": {
+        "summary": "Returns a paginated list of applications.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "default": 1,
+            "description": "The number of the page to return"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "type": "integer",
+            "default": 50,
+            "description": "The number of items to be returned on a single page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/Application" }
+                },
+                "page": { "type": "integer" },
+                "pageSize": { "type": "integer" },
+                "total": { "type": "integer" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications/{application_id}": {
+      "get": {
+        "summary": "Get application by ID",
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the application to get."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Application found",
+            "schema": { "$ref": "#/definitions/Application" }
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/author": {
+      "get": {
+        "summary": "Get the author (publisher) of the application by ID",
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the application to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/listing": {
+      "get": {
+        "summary": "Get the listing under which the application was left",
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Numeric ID of the application to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listing found",
+            "schema": {
+              "$ref": "#/definitions/Listing"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "integer" },
+        "user_name": { "type": "string" },
+        "user_surname": { "type": "string" },
+        "user_email": { "type": "string" },
+        "user_phone": { "type": "string" },
+        "bank_account": { "type": "string" }
+      }
+    },
+    "Property": {
+      "type": "object",
+      "properties": {
+        "property_id": { "type": "string", "format": "uuid" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "rooms": { "type": "integer" },
+        "square_meters": { "type": "number" },
+        "building_type": { "type": "string" },
+        "floor_value": { "type": "integer" },
+        "floor_count": { "type": "integer" },
+        "centre_distance": { "type": "numeric" },
+        "build_year": { "type": "integer" },
+        "city": { "type": "string" },
+        "owner_id": { "type": "integer" }
+      }
+    },
+    "Listing": {
+      "type": "object",
+      "properties": {
+        "listing_id": { "type": "integer" },
+        "listing_type": { "type": "string" },
+        "listing_price": { "type": "numeric" },
+        "listing_status": { "type": "string", "default": "active" },
+        "listing_description": { "type": "string" },
+        "created_at": { "type": "string", "format": "ISO 8601" },
+        "id_property": { "type": "string", "format": "uuid" },
+        "id_user": { "type": "integer" }
+      }
+    },
+    "DetailedListing": {
+      "type": "object",
+      "properties": {
+        "listing_id": { "type": "integer" },
+        "listing_type": { "type": "string" },
+        "listing_price": { "type": "numeric" },
+        "listing_status": { "type": "string", "default": "active" },
+        "listing_description": { "type": "string" },
+        "created_at": { "type": "string", "format": "ISO 8601" },
+        "id_property": { "type": "string", "format": "uuid" },
+        "id_user": { "type": "integer" },
+        "property": {
+          "$ref": "#/definitions/Property"
+        }
+      }
+    },
+    "Application": {
+      "type": "object",
+      "properties": {
+        "application_id": { "type": "integer" },
+        "application_message": { "type": "string" },
+        "is_submitted": { "type": "boolean" },
+        "created_at": { "type": "string", "format": "ISO 8601" },
+        "id_listing": { "type": "integer" },
+        "id_user": { "type": "integer" }
+      }
+    }
+  }
+}

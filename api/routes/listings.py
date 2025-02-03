@@ -17,7 +17,6 @@ def get_listings(page, page_size):
         'rooms': Property.rooms,
         'building_type': Property.building_type,
         'city': Property.city,
-        'build_year': Property.build_year,
         'listing_type': Listing.listing_type,
         'listing_status': Listing.listing_status,
         'price_min': lambda v: Listing.listing_price >= int(v),

@@ -1,8 +1,13 @@
 
-# Real Estate Agency API
+# Real Estate AGency API
 
-A pet-project for a university task, that simulates a real estate agency database filled with real-world data from Kaggle Dataset using Generator class. Project also contains RESTful API made with Flask, SQLAlchemy with SwaggerUI documentation.
+A pet-project for a univercity task, that simulates a real estate agency database filled with real-world data from Kaggle Dataset using Generator class. Project also contains RESTful API made with Flask, SQLAlchemy with SwaggerUI documentation.
 
+## Main technologies used
+
+- Development stack: Python Flask, Flask-SQLAlchemy, flask-swagger-ui, Faker, pandas
+- Database: PostgreSQL
+- Dataset: [Kaggle Apartment Prices in Poland](https://www.kaggle.com/datasets/krzysztofjamroz/apartment-prices-in-poland)
 
 ## Run Locally
 
